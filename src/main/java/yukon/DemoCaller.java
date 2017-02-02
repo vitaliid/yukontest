@@ -1,6 +1,7 @@
 package yukon;
 
 import yukon.service.ServiceDTO;
+import yukon.service.UnknownServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,11 @@ public class DemoCaller implements Caller {
             public void run() {
                 for (int i = 1234; i < 1248; i++) {
                     for (Caller caller : callers) {
-                        monitor.unregister(caller, new ServiceDTO("localhost", i));
+                        try {
+                            monitor.unregister(caller, new ServiceDTO("localhost", i));
+                        } catch (UnknownServiceException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 System.out.println("There should be end.");

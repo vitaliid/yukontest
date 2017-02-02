@@ -2,6 +2,7 @@ package yukon;
 
 import yukon.service.ServiceDTO;
 import yukon.service.ServiceWorker;
+import yukon.service.UnknownServiceException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +46,8 @@ public class Monitor {
         }
     }
 
-    public void unregister(Caller caller, ServiceDTO service) {
+    public void unregister(Caller caller, ServiceDTO service)
+            throws UnknownServiceException {
         List<ScheduledTask> scheduledTasks = activeSchedulers.get(service);
 
         if (scheduledTasks != null) {
@@ -61,6 +63,8 @@ public class Monitor {
                 activeSchedulers.remove(service);
                 activeServices.remove(service).terminate();
             }
+        } else {
+            throw new UnknownServiceException("This service was not registered or is not already active.");
         }
     }
 
